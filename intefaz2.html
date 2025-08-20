@@ -1,0 +1,148 @@
+<?php
+if (isset($_FILES['foto'])) {
+    $archivo = $_FILES['foto'];
+    $nombreArchivo = uniqid() . "_" . $archivo['name'];
+    $rutaDestino = "fotos_perfil/" . $nombreArchivo;
+
+    if (move_uploaded_file($archivo['tmp_name'], $rutaDestino)) {
+        // Guardar en la base de datos
+        $conexion = new mysqli("localhost", "usuario", "contraseña", "usuarios_db");
+        $sql = "UPDATE usuarios SET foto_perfil = '$rutaDestino' WHERE id = $id_usuario";
+        $conexion->query($sql);
+        echo "Foto actualizada con éxito.";
+    } else {
+        echo "Error al subir la foto.";
+    }
+}
+?>
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itconneted!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="Istyle.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-content">
+            <form action="logout.php" method="post">
+            <button type="submit" class="logout-button" id="logoutBtn" title="Cerrar Sesión">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span></span>  
+                </button>
+            </form>
+
+            
+            <div class="profile-photo"><img src="Logo.png" alt="Logo" class="profile-image">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- User Profile Section -->
+        <section class="user-profile">
+            <div class="user-info">
+                
+            </form>
+            <form action="subir_foto.php" method="POST" enctype="multipart/form-data">
+                <div class="user-avatar" type ="sutmin">
+                    <i class="fas fa-user"></i>    
+                </div>
+            </form>
+                <div class="user-details">
+                    <?php
+                    session_start();
+                    echo "¡Bienvenido, " . $_SESSION['name'] . "!";
+                    ?>
+                    <span class="user-status">Conectado</span>
+                </div>
+            </div>
+                <button class="theme-toggle" id="themeToggle" title="Cambiar tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </section>
+    </main>
+      
+    <main class="main-content">
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Anuncios Section -->
+            <section class="content-section">
+                <div class="section-content" id="anunciosContent">
+                    <div class="empty-state">
+                        <i class="fas fa-bullhorn empty-icon"></i>
+                        <p class="empty-message">No hay anuncios disponibles</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mis Cursos Section -->
+            <section class="content-section">
+                <div class="section-header">
+                    <h3 class="section-title">Mensajeria</h3>
+                    </button>
+                </div>
+                <section class="content-section">
+    <div class="section-header">
+        <!-- Si quieres un botón para abrir un modal de nuevo mensaje, puedes ponerlo aquí -->
+    </div>
+    <div class="section-content" id="mensajesContent">
+        <div class="empty-state">
+            <i class="fas fa-comments empty-icon"></i>
+            <p class="empty-message">No hay mensajes aún</p>
+        </div>
+    </div>
+    <!-- Formulario para enviar mensaje -->
+    <form id="sendMessageForm">
+        <div class="form-group">
+            <label for="recipient">Para (usuario):</label>
+            <input type="text" id="recipient" name="recipient" required>
+        </div>
+        <div class="form-group">
+            <label for="messageText">Mensaje:</label>
+            <textarea id="messageText" name="messageText" rows="2" required></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Enviar</button>
+    </form>
+</section>
+            </div>
+    
+    </main>
+    <!-- Modal for Adding Content (Future Database Integration) -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="modalTitle">Agregar Elemento</h4>
+                <button class="close-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-group">
+                     <label for="itemTitle">Título:</label>
+                        <input type="text" id="itemTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemDescription">Descripción:</label>
+                        <textarea id="itemDescription" name="description" rows="4"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" id="cancelBtn">Cancelar</button>
+                        <button type="submit" class="btn-submit">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js2.js"></script>
+</body>
+</html>

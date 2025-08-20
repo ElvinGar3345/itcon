@@ -1,0 +1,69 @@
+<?php
+session_start();
+$errors = [
+    'login' => $_SESSION['login_error'] ??'',
+    'registrarse' => $_SESSION['register_error'] ??''
+];
+$activeForm = $_SESSION['active_form'] ?? 'login';
+
+session_unset();
+
+function showError ($error){
+    return !empty($error) ? "<p class='error-message'>$error</p>":'';
+
+}
+
+function isActiveForm($formName, $activeForm) {
+    return $formName === $activeForm ? 'active':'';
+}
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Itconnected!</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <img src="logo.png" alt="Logo" class="logo">
+      <h1>Bienvenido a Itconnected!</h1>
+      <p>Accede a tu cuenta para conversar.</p>
+    </div>
+
+    <div class="right-panel">
+      <div class="caja-formulario <?= isActiveForm('login', $activeForm);?>" id="formulario-login">
+            <form action="registro_login.php" method="post">
+                <h2>Login</h2>
+                <?= showError($errors['login']);?>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Contraseña" required>
+                <button type="submit" name="login">Login</button>
+                <p>No tienes cuenta?<a href="#" onclick="showForm('formulario-registro')">Registrarse</a></p>
+            </form>
+        </div>
+
+        <div class="caja-formulario <?= isActiveForm('registrarse', $activeForm);?>" id="formulario-registro">
+            <form action="registro_login.php" method="post">
+                <h2>Registrarse</h2>
+                <?= showError($errors['registrarse']);?>
+                <input type="text" name="name" placeholder="Nombre" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Contraseña" required>
+                <select name="rol" required>
+                    <option value="">--Seleccione Rol</option>
+                    <option value="user">Usuario</option>
+                    <option value="admin">Administrador</option>
+                </select>
+                <button type="submit" name="registrarse">Registrarse</button>
+                <p>Ya tienes una cuenta?<a href="#" onclick="showForm('formulario-login')">Login</a></p>
+            </form>
+        </div>
+    </div>
+  </div>
+  <script src="JE.js"></script>
+</body>
+</html>
